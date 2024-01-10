@@ -14,7 +14,7 @@ func PostsList(c *gin.Context) {
 	var posts []models.Post
 	config.DB.Find(&posts)
 
-	utils.Result(http.StatusOK, "Success", posts)
+	utils.Result(c, http.StatusOK, "Success", posts)
 }
 
 type CreatePostInput struct {
@@ -26,24 +26,24 @@ func PostsCreate(c *gin.Context) {
 	// Get Data of Request Body
 	var input CreatePostInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		utils.Result(http.StatusBadRequest, "Fail", err.Error())
+		utils.Result(c, http.StatusBadRequest, "Fail", err.Error())
 	}
 
 	// Create Post
 	post := models.Post{Title: input.Title, Content: input.Content, CreatedAt: time.Now(), UpdatedAt: time.Now()}
 	config.DB.Create(&post)
 
-	utils.Result(http.StatusOK, "Success", post)
+	utils.Result(c, http.StatusOK, "Success", post)
 }
 
 func PostDetail(c *gin.Context) {
 	var post models.Post
 
 	if err := config.DB.Where("id = ?", c.Param("id")).First(&post).Error; err != nil {
-		utils.Result(http.StatusNotFound, "Fail", err.Error())
+		utils.Result(c, http.StatusNotFound, "Fail", err.Error())
 	}
 
-	utils.Result(http.StatusOK, "Success", post)
+	utils.Result(c, http.StatusOK, "Success", post)
 
 }
 
@@ -56,29 +56,29 @@ func PostUpdate(c *gin.Context) {
 	var post models.Post
 
 	if err := config.DB.Where("id = ?", c.Param("id")).First(&post).Error; err != nil {
-		utils.Result(http.StatusNotFound, "Fail", "record not found")
+		utils.Result(c, http.StatusNotFound, "Fail", "record not found")
 	}
 
 	var input UpdatePostInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		utils.Result(http.StatusBadRequest, "Fail", err.Error())
+		utils.Result(c, http.StatusBadRequest, "Fail", err.Error())
 	}
 
 	updatedPost := models.Post{Title: input.Title, Content: input.Content, UpdatedAt: time.Now()}
 
 	config.DB.Model(&post).Updates(&updatedPost)
-	utils.Result(http.StatusOK, "Success", post)
+	utils.Result(c, http.StatusOK, "Success", post)
 
 }
 
 func PostDelete(c *gin.Context) {
 	var post models.Post
 	if err := config.DB.Where("id = ?", c.Param("id")).First(&post).Error; err != nil {
-		utils.Result(http.StatusNotFound, "Fail", "record not found")
+		utils.Result(c, http.StatusNotFound, "Fail", "record not found")
 	}
 
 	config.DB.Delete(&post)
 
-	utils.Result(http.StatusOK, "Success", "success")
+	utils.Result(c, http.StatusOK, "Success", nil)
 }
