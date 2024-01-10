@@ -81,4 +81,5 @@ func PostDelete(c *gin.Context) {
 	config.DB.Delete(&post)
 
 	utils.Result(c, http.StatusOK, "Success", nil)
+
 }
