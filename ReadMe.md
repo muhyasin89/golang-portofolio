@@ -16,3 +16,10 @@ https://gorm.io/docs/
 
 Read this
 https://dev.to/samzhangjy/restful-crud-with-golang-for-beginners-23ia
+
+
+## How to start
+program name is `go-crud`
+```
+CompileDaemon -command="./MyProgram" 
+```
